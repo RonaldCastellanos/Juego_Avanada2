@@ -20,6 +20,12 @@ class DestructorCar:
     def enviarEnemigos(self):
         cocheMalvado=Enemigo(self)
         self.enemigos.add(cocheMalvado)  
+    
+    def eliminarEnemigosViejos(self):
+        for enemigo in self.enemigos.copy():
+            if enemigo.rect.bottom >= self.ajustes.altura:
+                self.enemigos.remove(enemigo)
+                self.enviarEnemigos ()
 
     def actualizarEnemigos(self):
         self.enemigos.update()
@@ -66,7 +72,8 @@ class DestructorCar:
             self.comprobarEventos()
             self.coche.actualizar()
             self.balas.update() 
-            self.actualizarEnemigos()  # Corregido: debería ser 'self.actualizarEnemigos()', no 'self.actualizarEnemigo()'
+            self.actualizarEnemigos()  
+            self.eliminarEnemigosViejos()
             self.actualizarPantalla()
 
 if __name__ == "__main__":
