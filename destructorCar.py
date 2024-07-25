@@ -16,6 +16,9 @@ class DestructorCar:
         self.balas = pygame.sprite.Group() 
         self.enemigos = pygame.sprite.Group()
         self.enviarEnemigos()
+        self.puntuacionJugador = 0
+        self.salud = self.ajustes.vidasJugador
+        self.enemigosHuir = self.ajustes.enemigosQuePuedenHuir
     
     def enviarEnemigos(self):
         cocheMalvado=Enemigo(self)
@@ -30,6 +33,18 @@ class DestructorCar:
     def actualizarEnemigos(self):
         self.enemigos.update()
        
+    def colisionBalaNuestra(self):
+        colision= pygame.sprite.groupcollide(self.balas, self.enemigos, True, True)
+        if len(colision) != 0:
+            self.puntuacionJugador += 10
+            self.enemigosHuir += 1
+
+    def colisionParaJugador(self):
+        colisionEnemigo = pygame.sprite.spritecollide(self.coche,self.enemigos,True)
+        if len(colisionEnemigo) != 0:
+            self.salud -= 1
+            self.enemigosHuir += 1
+        colisionBalaEnemiga =  pygame.sprite.spritecollide(self.coche,self.balasEnemigo,True)
     def actualizarPantalla(self):
         self.screen.blit(self.fondo, (0, 0))
         self.coche.blitme()
@@ -72,8 +87,10 @@ class DestructorCar:
             self.comprobarEventos()
             self.coche.actualizar()
             self.balas.update() 
+            self.colisionBalaNuestra()
             self.actualizarEnemigos()  
             self.eliminarEnemigosViejos()
+            self.colisionParaJugador()
             self.actualizarPantalla()
 
 if __name__ == "__main__":

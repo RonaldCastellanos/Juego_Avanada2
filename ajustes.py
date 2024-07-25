@@ -13,3 +13,10 @@ class Ajustes:
 
         #Enemigo
         self.velocidadEnemigo = 2.5
+        self.velocidadBalaEnemiga = 2
+        self.probabilidadDisparo = 3
+        self.probabilidadEnviarEnemigo =2
+
+        self.enemigosQuePuedenHuir = 10
+        self.vidadJugador = 5
+        
