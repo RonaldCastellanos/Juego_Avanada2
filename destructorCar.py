@@ -48,6 +48,10 @@ class DestructorCar:
         self.balas = pygame.sprite.Group()
         self.enemigos = pygame.sprite.Group()
         self.enviarEnemigos()
+        self.puntuacionJugador = 0
+        self.salud = self.ajustes.vidasJugador
+        self.enemigosHuir = self.ajustes.enemigoQuePuedehuir
+
 
         # Inicializar el mezclador de sonido
         pygame.mixer.init()

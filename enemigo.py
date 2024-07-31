@@ -10,7 +10,7 @@ class Enemigo(Sprite):
         self.ajustes = dc_game.ajustes
 
         # Cargar los fotogramas del GIF
-        self.frames = self.load_frames('C:/Users/amaya/OneDrive/Desktop/echos/frames')  # Ruta correcta
+        self.frames = self.load_frames('c:/Users/Admin/Desktop/JUEGO/frames')  # Ruta correcta
         self.current_frame = 0
         self.image = self.frames[self.current_frame]
         self.rect = self.image.get_rect()

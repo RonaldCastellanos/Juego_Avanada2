@@ -10,3 +10,6 @@ class Ajustes:
         
         self.velocidadEnemigo = 1.6
 
+        self.enemigoQuePuedehuir=10
+        self.vidasJugador=3
+        
