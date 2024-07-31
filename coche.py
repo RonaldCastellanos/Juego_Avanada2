@@ -1,28 +1,89 @@
 import pygame
+import time
 
 class Coche:
     def __init__(self, dc_game):
         self.screen = dc_game.screen
-        self.screen_rect = dc_game.screen.get_rect()
+        self.screen_rect = self.screen.get_rect()
+        self.ajustes = dc_game.ajustes
 
-        self.imagen = pygame.image.load('imagenes/coche.png')
-        self.rect = self.imagen.get_rect()
-        self.rect.midbottom = self.screen_rect.midbottom
+        self.image = pygame.image.load('imagenes/cocheR2.png')
+        self.original_image = self.image
+        self.rect = self.image.get_rect()
+        self.rect.center = self.screen_rect.center
 
-        self.moviendoIzquierda = False
+        self.x = float(self.rect.x)
+        self.y = float(self.rect.y)
+        self.angulo = 0
+
         self.moviendoDerecha = False
+        self.moviendoIzquierda = False
         self.moviendoArriba = False
         self.moviendoAbajo = False
 
-    def blitme(self):
-        self.screen.blit(self.imagen, self.rect)
+        # Tiempo de presionamiento para cada tecla de dirección
+        self.tiempo_movimiento = {
+            "derecha": 0,
+            "izquierda": 0,
+            "arriba": 0,
+            "abajo": 0
+        }
+
+        self.velocidad_inicial = 0.05  # Velocidad inicial muy baja
+        self.velocidad_maxima = 3   # Velocidad máxima alta
+        self.aceleracion = (self.velocidad_maxima - self.velocidad_inicial) / 0.4  # Aceleración rápida
 
     def actualizar(self):
-        if self.moviendoIzquierda and self.rect.left > 0:
-            self.rect.x -= 2
-        if self.moviendoDerecha and self.rect.right < self.screen_rect.right:
-            self.rect.x += 2
-        if self.moviendoArriba and self.rect.top > 0:
-            self.rect.y -= 2
-        if self.moviendoAbajo and self.rect.bottom < self.screen_rect.bottom:
-            self.rect.y += 2
+        ahora = time.time()
+
+        if self.moviendoDerecha:
+            self.tiempo_movimiento["derecha"] += 0.01  # Incrementar más lentamente
+            velocidad = self.velocidad_inicial + min(self.tiempo_movimiento["derecha"] * self.aceleracion, self.velocidad_maxima)
+            self.x += velocidad
+            self.angulo = -90
+        else:
+            self.tiempo_movimiento["derecha"] = 0
+
+        if self.moviendoIzquierda:
+            self.tiempo_movimiento["izquierda"] += 0.01  # Incrementar más lentamente
+            velocidad = self.velocidad_inicial + min(self.tiempo_movimiento["izquierda"] * self.aceleracion, self.velocidad_maxima)
+            self.x -= velocidad
+            self.angulo = 90
+        else:
+            self.tiempo_movimiento["izquierda"] = 0
+
+        if self.moviendoArriba:
+            self.tiempo_movimiento["arriba"] += 0.01  # Incrementar más lentamente
+            velocidad = self.velocidad_inicial + min(self.tiempo_movimiento["arriba"] * self.aceleracion, self.velocidad_maxima)
+            self.y -= velocidad
+            self.angulo = 0
+        else:
+            self.tiempo_movimiento["arriba"] = 0
+
+        if self.moviendoAbajo:
+            self.tiempo_movimiento["abajo"] += 0.01  # Incrementar más lentamente
+            velocidad = self.velocidad_inicial + min(self.tiempo_movimiento["abajo"] * self.aceleracion, self.velocidad_maxima)
+            self.y += velocidad
+            self.angulo = 180
+        else:
+            self.tiempo_movimiento["abajo"] = 0
+
+        self.rect.x = self.x
+        self.rect.y = self.y
+
+        # Rotar la imagen del coche según el ángulo
+        self.image = pygame.transform.rotate(self.original_image, self.angulo)
+
+    def rotar(self, direccion):
+        if direccion == 'derecha':
+            self.angulo = -90
+        elif direccion == 'izquierda':
+            self.angulo = 90
+        elif direccion == 'arriba':
+            self.angulo = 0
+        elif direccion == 'abajo':
+            self.angulo = 180
+        self.image = pygame.transform.rotate(self.original_image, self.angulo)
+
+    def blitme(self):
+        self.screen.blit(self.image, self.rect)
