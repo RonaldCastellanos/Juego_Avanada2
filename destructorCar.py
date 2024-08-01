@@ -74,11 +74,25 @@ class DestructorCar:
         for enemigo in self.enemigos.copy():
             if enemigo.rect.right >= self.ajustes.anchura:
                 self.enemigos.remove(enemigo)
+                self.enviarEnemigos -= 1
                 self.enviarEnemigos()
 
     def actualizarEnemigos(self):
         self.enemigos.update()
-       
+    def colisionBalaNuestra(self):
+        colision = pygame.sprite.groupcollide(self.balas, self.enemigos,True,True)
+        if len(colision) != 0:
+            self.puntuacionJugador += 10
+            self.enemigosHuiras += 1
+            
+
+    def colicionParaJugador(self):
+        colisionEnemigo =   pygame.sprite.spritecollide(self.coche, self.enemigos,True)    
+        colisionBalaEnemigo = pygame.sprite.spritecollide(self.coche, self.balasEnemigo,True)
+        if len(colisionBalaEnemigo) != 0 and len(colisionEnemigo)!= 0:
+            self.salud -= 1
+            
+
     def actualizarPantalla(self):
         self.screen.blit(self.fondo, (0, 0))
         self.coche.blitme()
@@ -119,6 +133,12 @@ class DestructorCar:
                 elif event.key == pygame.K_DOWN:
                     self.coche.moviendoAbajo = False
 
+    def puntuacion(self):
+        fuente= pygame.font.SysFont ("serif",56)
+
+
+
+
     def run_game(self):
         while True:
             if self.en_juego:
@@ -126,7 +146,9 @@ class DestructorCar:
                 self.coche.actualizar()
                 self.balas.update()
                 self.actualizarEnemigos()
+                self.colisionBalaNuestra()
                 self.eliminarEnemigosViejos()
+                self.coche.colisionParaJugador()
                 self.actualizarPantalla()
             else:
                 self.menu.mostrar_menu()
