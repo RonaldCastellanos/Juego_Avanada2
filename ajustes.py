@@ -9,7 +9,7 @@ class Ajustes:
         self.fondo = 'imagenes/Fgp.jpg'
         
         self.velocidadEnemigo = 1.6
-
+#muestra los enemigos que huyen y las vidas del jugador
         self.enemigoQuePuedehuir=10
         self.vidasJugador=3
         
