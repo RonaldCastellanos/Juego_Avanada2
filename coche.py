@@ -33,6 +33,12 @@ class Coche:
         self.velocidad_maxima = 3   # Velocidad máxima alta
         self.aceleracion = (self.velocidad_maxima - self.velocidad_inicial) / 0.4  # Aceleración rápida
 
+        # Atributos para el control de balas
+        self.max_balas = 10
+        self.balas_disponibles = self.max_balas
+        self.tiempo_recarga = 1.5  # Tiempo de recarga en segundos
+        self.ultimo_lanzamiento = time.time()
+
     def actualizar(self):
         ahora = time.time()
 
@@ -74,6 +80,11 @@ class Coche:
         # Rotar la imagen del coche según el ángulo
         self.image = pygame.transform.rotate(self.original_image, self.angulo)
 
+        # Gestionar el recarga de balas
+        if self.balas_disponibles < self.max_balas and (ahora - self.ultimo_lanzamiento) >= self.tiempo_recarga:
+            self.balas_disponibles = self.max_balas
+            self.ultimo_lanzamiento = ahora
+
     def rotar(self, direccion):
         if direccion == 'derecha':
             self.angulo = -90
@@ -85,5 +96,27 @@ class Coche:
             self.angulo = 180
         self.image = pygame.transform.rotate(self.original_image, self.angulo)
 
+    def reiniciar_posicion(self):
+        self.rect.center = self.screen_rect.center
+        self.x = float(self.rect.x)
+        self.y = float(self.rect.y)
+        self.angulo = 0  # Opcional: restablecer el ángulo
+        self.image = pygame.transform.rotate(self.original_image, self.angulo)
+
     def blitme(self):
         self.screen.blit(self.image, self.rect)
+
+    def destruir(self):
+        # Eliminar el coche, no se muestra mensaje
+        self.rect.x = -self.rect.width
+
+    def lanzar_bala(self):
+        ahora = time.time()
+        if self.balas_disponibles > 0:
+            # Lógica para lanzar la bala
+            self.balas_disponibles -= 1
+            # Aquí iría la creación y envío de la bala
+
+        if self.balas_disponibles == 0:
+            self.ultimo_lanzamiento = ahora
+
